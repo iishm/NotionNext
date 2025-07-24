@@ -1,3 +1,6 @@
+import 'swiper/css'
+import 'swiper/css/autoplay'
+import 'swiper/css/pagination'
 // import '@/styles/animate.css' // @see https://animate.style/
 import '@/styles/globals.css'
 import '@/styles/utility-patterns.css'

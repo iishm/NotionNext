@@ -7,6 +7,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useImperativeHandle, useRef, useState } from 'react'
 import CONFIG from '../config'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay, Pagination } from 'swiper/modules'
 
 /**
  * 顶部英雄区
@@ -260,7 +262,7 @@ function TopGroup(props) {
         })}
       </div>
       {/* 一个大的跳转文章卡片 */}
-      <TodayCard cRef={todayCardRef} siteInfo={siteInfo} />
+      <TodayCard cRef={todayCardRef} siteInfo={siteInfo} allNavPages={allNavPages} />
     </div>
   )
 }
@@ -318,36 +320,20 @@ function getTopPosts({ latestPosts, allNavPages }) {
  */
 function TodayCard({ cRef, siteInfo }) {
   const router = useRouter()
+  // link = e.g. '/2025-07-24-today'
   const link = siteConfig('HEO_HERO_TITLE_LINK', null, CONFIG)
-  const { locale } = useGlobal()
-  // 卡牌是否盖住下层
   const [isCoverUp, setIsCoverUp] = useState(true)
 
-  /**
-   * 外部可以调用此方法
-   */
-  useImperativeHandle(cRef, () => {
-    return {
-      coverUp: () => {
-        setIsCoverUp(true)
-      }
-    }
-  })
+  // 暴露给父组件的方法，用于 mouseLeave 时重新盖住
+  useImperativeHandle(cRef, () => ({
+    coverUp: () => setIsCoverUp(true)
+  }))
 
-  /**
-   * 查看更多
-   * @param {*} e
-   */
-  function handleClickShowMore(e) {
-    e.stopPropagation()
-    setIsCoverUp(false)
-  }
-
-  /**
-   * 点击卡片跳转的链接
-   * @param {*} e
-   */
-  function handleCardClick(e) {
+  // 如果没上传任何 Carousel，就 fallback 回 siteInfo.pageCover
+  const coverSlides = siteInfo.attachments ? siteInfo.attachments : [ siteInfo.pageCover ]
+  
+  // 点击整个卡片跳转
+  function handleCardClick() {
     router.push(link)
   }
 
@@ -355,8 +341,9 @@ function TodayCard({ cRef, siteInfo }) {
     <div
       id='today-card'
       className={`${
-        isCoverUp ? ' ' : 'pointer-events-none'
-      } overflow-hidden absolute hidden xl:flex flex-1 flex-col h-full top-0 w-full`}>
+        isCoverUp ? '' : 'pointer-events-none'
+      } overflow-hidden absolute hidden xl:flex flex-1 flex-col h-full top-0 w-full`}
+    >
       <div
         id='card-body'
         onClick={handleCardClick}
@@ -364,47 +351,52 @@ function TodayCard({ cRef, siteInfo }) {
           isCoverUp
             ? 'opacity-100 cursor-pointer'
             : 'opacity-0 transform scale-110 pointer-events-none'
-        } shadow transition-all duration-200 today-card h-full bg-black rounded-xl relative overflow-hidden flex items-end`}>
-        {/* 卡片文字信息 */}
-        <div
-          id='today-card-info'
-          className='flex justify-between w-full relative text-white p-10 items-end'>
-          <div className='flex flex-col'>
+        } shadow transition-all duration-200 today-card h-full bg-black rounded-xl relative overflow-hidden flex flex-col`}
+      >
+        {/* 卡片文字 & 查看更多按钮（保持不动） */}
+        <div id='today-card-info' className='relative z-10 flex justify-between w-full p-6 text-white'>
+          <div>
             <div className='text-xs font-light'>
               {siteConfig('HEO_HERO_TITLE_4', null, CONFIG)}
             </div>
-            <div className='text-3xl font-bold'>
+            <div className='text-2xl font-bold'>
               {siteConfig('HEO_HERO_TITLE_5', null, CONFIG)}
             </div>
           </div>
-          {/* 查看更多的按钮 */}
-          <div
-            onClick={handleClickShowMore}
-            className={`'${isCoverUp ? '' : 'hidden pointer-events-none'} z-10 group flex items-center px-3 h-10 justify-center  rounded-3xl
-            glassmorphism transition-colors duration-100 `}>
-            <PlusSmall
-              className={
-                'group-hover:rotate-180 duration-500 transition-all w-6 h-6 mr-2 bg-white rounded-full stroke-black'
-              }
-            />
-            <div id='more' className='select-none'>
-              {locale.COMMON.RECOMMEND_POSTS}
-            </div>
-          </div>
+          {/* <button
+            onClick={e => {
+              e.stopPropagation()
+              setIsCoverUp(false)
+            }}
+            className='z-10 px-3 py-1 bg-white rounded-full flex items-center space-x-1'
+          >
+            <PlusSmall className='w-4 h-4 stroke-black' />
+            <span className='text-sm text-black'>{useGlobal().locale.COMMON.RECOMMEND_POSTS}</span>
+          </button> */}
         </div>
 
-        {/* 封面图 */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={siteInfo?.pageCover}
-          id='today-card-cover'
-          className={`${
-            isCoverUp ? '' : ' pointer-events-none'
-          } hover:scale-110 duration-1000 object-cover cursor-pointer today-card-cover absolute w-full h-full top-0`}
-        />
+        {/* —— 轮播区域 —— */}
+        <Swiper
+          modules={[Autoplay, Pagination]}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          loop
+          pagination={{ clickable: true }}
+          className='absolute top-0 left-0 w-full h-full'
+        >
+          {coverSlides.map((url, idx) => (
+            <SwiperSlide key={idx}>
+              <img
+                src={url}
+                alt={`today-slide-${idx}`}
+                className='object-cover w-full h-full'
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
     </div>
   )
 }
+
 
 export default Hero
