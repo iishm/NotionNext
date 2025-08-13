@@ -8,8 +8,8 @@ const CONFIG = {
 
   // 首页顶部通知条滚动内容，如不需要可以留空 []
   HEO_NOTICE_BAR: [
-    { title: '欢迎来到我们的网站', url: 'https://danlab.xyz' },
-    { title: '访问成果列表了解更多', url: 'https://danlab.xyz/chengguo' }
+    { title: '欢迎来到我们的网站', url: 'https://iishm.com' },
+    { title: '访问成果列表了解更多', url: 'https://iishm.com/chengguo' }
   ],
 
   // 英雄区左右侧组件颠倒位置
@@ -20,7 +20,7 @@ const CONFIG = {
   // 英雄区(首页顶部大卡)
   HEO_HERO_TITLE_1: '分享工程监测技术',
   HEO_HERO_TITLE_2: '与思维认知',
-  HEO_HERO_TITLE_3: 'DANLAB.XYZ',
+  HEO_HERO_TITLE_3: 'iishm.com',
   HEO_HERO_TITLE_4: '',
   HEO_HERO_TITLE_5: '',
   HEO_HERO_TITLE_LINK: '/photos',
@@ -29,8 +29,8 @@ const CONFIG = {
 
   // 英雄区显示三个置顶分类
   HEO_HERO_CATEGORY_1: { title: '团队成果', url: '/chengguo' },
-  HEO_HERO_CATEGORY_2: { title: '动态展台（建设中）', url: '/zhantai' },
-  HEO_HERO_CATEGORY_3: { title: '云端实验室（建设中）', url: 'https://cloud.danlab.xyz' },
+  HEO_HERO_CATEGORY_2: { title: '监测系统演示', url: 'https://demo.iishm.com' },
+  HEO_HERO_CATEGORY_3: { title: '云端实验室（建设中）', url: 'https://cloud.iishm.com' },
 
   // 英雄区右侧推荐文章标签, 例如 [推荐] , 最多六篇文章; 若留空白''，则推荐最近更新文章
   HEO_HERO_RECOMMEND_POST_TAG: '推荐',
@@ -53,7 +53,7 @@ const CONFIG = {
   HEO_INFO_CARD_ICON1: 'fas fa-user',
   HEO_INFO_CARD_URL2: 'https://github.com/iishm',
   HEO_INFO_CARD_ICON2: 'fab fa-github',
-  HEO_INFO_CARD_URL3: 'https://danlab.xyz/about',
+  HEO_INFO_CARD_URL3: 'https://iishm.com/about',
   HEO_INFO_CARD_TEXT3: '了解更多',
 
   // 用户技能图标
